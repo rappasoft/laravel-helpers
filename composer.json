@@ -1,0 +1,22 @@
+{
+    "name": "rappasoft/laravel-helpers",
+    "description": "Laravel Helpers for Non-Laravel Projects",
+    "license": "MIT",
+    "keywords": ["laravel", "helpers"],
+    "authors": [
+        {
+            "name": "Anthony Rappa",
+            "email": "rappa819@gmail.com"
+        }
+    ],
+    "require": {
+    	"php": ">=5.4.0",
+    	"illuminate/support": "~5.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "minimum-stability": "stable"
+}
