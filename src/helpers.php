@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Debug\Dumper;
+/**
+ * Laravel Helpers File
+ * Extracted by Anthony Rappa
+ * rappa819@gmail.com
+ */
 
 if ( ! function_exists('append_config'))
 {
@@ -43,7 +44,12 @@ if ( ! function_exists('array_add'))
 	 */
 	function array_add($array, $key, $value)
 	{
-		return Arr::add($array, $key, $value);
+		if (is_null(get($array, $key)))
+		{
+			set($array, $key, $value);
+		}
+
+		return $array;
 	}
 }
 
@@ -58,7 +64,16 @@ if ( ! function_exists('array_build'))
 	 */
 	function array_build($array, Closure $callback)
 	{
-		return Arr::build($array, $callback);
+		$results = array();
+
+		foreach ($array as $key => $value)
+		{
+			list($innerKey, $innerValue) = call_user_func($callback, $key, $value);
+
+			$results[$innerKey] = $innerValue;
+		}
+
+		return $results;
 	}
 }
 
@@ -72,7 +87,7 @@ if ( ! function_exists('array_divide'))
 	 */
 	function array_divide($array)
 	{
-		return Arr::divide($array);
+		return array(array_keys($array), array_values($array));
 	}
 }
 
@@ -87,7 +102,21 @@ if ( ! function_exists('array_dot'))
 	 */
 	function array_dot($array, $prepend = '')
 	{
-		return Arr::dot($array, $prepend);
+		$results = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$results = array_merge($results, dot($value, $prepend.$key.'.'));
+			}
+			else
+			{
+				$results[$prepend.$key] = $value;
+			}
+		}
+
+		return $results;
 	}
 }
 
@@ -102,7 +131,7 @@ if ( ! function_exists('array_except'))
 	 */
 	function array_except($array, $keys)
 	{
-		return Arr::except($array, $keys);
+		return array_diff_key($array, array_flip((array) $keys));
 	}
 }
 
@@ -117,7 +146,22 @@ if ( ! function_exists('array_fetch'))
 	 */
 	function array_fetch($array, $key)
 	{
-		return Arr::fetch($array, $key);
+		$results = array();
+
+		foreach (explode('.', $key) as $segment)
+		{
+			foreach ($array as $value)
+			{
+				if (array_key_exists($segment, $value = (array) $value))
+				{
+					$results[] = $value[$segment];
+				}
+			}
+
+			$array = array_values($results);
+		}
+
+		return array_values($results);
 	}
 }
 
@@ -133,7 +177,12 @@ if ( ! function_exists('array_first'))
 	 */
 	function array_first($array, $callback, $default = null)
 	{
-		return Arr::first($array, $callback, $default);
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value)) return $value;
+		}
+
+		return value($default);
 	}
 }
 
@@ -149,7 +198,7 @@ if ( ! function_exists('array_last'))
 	 */
 	function array_last($array, $callback, $default = null)
 	{
-		return Arr::last($array, $callback, $default);
+		return first(array_reverse($array), $callback, $default);
 	}
 }
 
@@ -163,7 +212,11 @@ if ( ! function_exists('array_flatten'))
 	 */
 	function array_flatten($array)
 	{
-		return Arr::flatten($array);
+		$return = array();
+
+		array_walk_recursive($array, function($x) use (&$return) { $return[] = $x; });
+
+		return $return;
 	}
 }
 
@@ -178,7 +231,27 @@ if ( ! function_exists('array_forget'))
 	 */
 	function array_forget(&$array, $keys)
 	{
-		return Arr::forget($array, $keys);
+		$original =& $array;
+
+		foreach ((array) $keys as $key)
+		{
+			$parts = explode('.', $key);
+
+			while (count($parts) > 1)
+			{
+				$part = array_shift($parts);
+
+				if (isset($array[$part]) && is_array($array[$part]))
+				{
+					$array =& $array[$part];
+				}
+			}
+
+			unset($array[array_shift($parts)]);
+
+			// clean up after each pass
+			$array =& $original;
+		}
 	}
 }
 
@@ -194,7 +267,21 @@ if ( ! function_exists('array_get'))
 	 */
 	function array_get($array, $key, $default = null)
 	{
-		return Arr::get($array, $key, $default);
+		if (is_null($key)) return $array;
+
+		if (isset($array[$key])) return $array[$key];
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) || ! array_key_exists($segment, $array))
+			{
+				return value($default);
+			}
+
+			$array = $array[$segment];
+		}
+
+		return $array;
 	}
 }
 
@@ -209,7 +296,21 @@ if ( ! function_exists('array_has'))
 	 */
 	function array_has($array, $key)
 	{
-		return Arr::has($array, $key);
+		if (empty($array) || is_null($key)) return false;
+
+		if (array_key_exists($key, $array)) return true;
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) || ! array_key_exists($segment, $array))
+			{
+				return false;
+			}
+
+			$array = $array[$segment];
+		}
+
+		return true;
 	}
 }
 
@@ -224,7 +325,7 @@ if ( ! function_exists('array_only'))
 	 */
 	function array_only($array, $keys)
 	{
-		return Arr::only($array, $keys);
+		return array_intersect_key($array, array_flip((array) $keys));
 	}
 }
 
@@ -240,7 +341,28 @@ if ( ! function_exists('array_pluck'))
 	 */
 	function array_pluck($array, $value, $key = null)
 	{
-		return Arr::pluck($array, $value, $key);
+		$results = array();
+
+		foreach ($array as $item)
+		{
+			$itemValue = data_get($item, $value);
+
+			// If the key is "null", we will just append the value to the array and keep
+			// looping. Otherwise we will key the array using the value of the key we
+			// received from the developer. Then we'll return the final array form.
+			if (is_null($key))
+			{
+				$results[] = $itemValue;
+			}
+			else
+			{
+				$itemKey = data_get($item, $key);
+
+				$results[$itemKey] = $itemValue;
+			}
+		}
+
+		return $results;
 	}
 }
 
@@ -256,7 +378,11 @@ if ( ! function_exists('array_pull'))
 	 */
 	function array_pull(&$array, $key, $default = null)
 	{
-		return Arr::pull($array, $key, $default);
+		$value = get($array, $key, $default);
+
+		forget($array, $key);
+
+		return $value;
 	}
 }
 
@@ -274,22 +400,28 @@ if ( ! function_exists('array_set'))
 	 */
 	function array_set(&$array, $key, $value)
 	{
-		return Arr::set($array, $key, $value);
-	}
-}
+		if (is_null($key)) return $array = $value;
 
-if ( ! function_exists('array_sort'))
-{
-	/**
-	 * Sort the array using the given Closure.
-	 *
-	 * @param  array     $array
-	 * @param  \Closure  $callback
-	 * @return array
-	 */
-	function array_sort($array, Closure $callback)
-	{
-		return Arr::sort($array, $callback);
+		$keys = explode('.', $key);
+
+		while (count($keys) > 1)
+		{
+			$key = array_shift($keys);
+
+			// If the key doesn't exist at this depth, we will just create an empty array
+			// to hold the next value, allowing us to create the arrays to hold final
+			// values at the correct depth. Then we'll keep digging into the array.
+			if ( ! isset($array[$key]) || ! is_array($array[$key]))
+			{
+				$array[$key] = array();
+			}
+
+			$array =& $array[$key];
+		}
+
+		$array[array_shift($keys)] = $value;
+
+		return $array;
 	}
 }
 
@@ -304,7 +436,14 @@ if ( ! function_exists('array_where'))
 	 */
 	function array_where($array, Closure $callback)
 	{
-		return Arr::where($array, $callback);
+		$filtered = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value)) $filtered[$key] = $value;
+		}
+
+		return $filtered;
 	}
 }
 
@@ -318,7 +457,35 @@ if ( ! function_exists('camel_case'))
 	 */
 	function camel_case($value)
 	{
-		return Str::camel($value);
+		$camelCache = [];
+
+		if (isset($camelCache[$value]))
+		{
+			return $camelCache[$value];
+		}
+
+		return $camelCache[$value] = lcfirst(studly($value));
+	}
+}
+
+if ( ! function_exists('camel_case'))
+{
+	/**
+	 * Convert a value to camel case.
+	 *
+	 * @param  string  $value
+	 * @return string
+	 */
+	function camel_case($value)
+	{
+		$camelCache = [];
+
+		if (isset($camelCache[$value]))
+		{
+			return $camelCache[$value];
+		}
+
+		return $camelCache[$value] = lcfirst(studly($value));
 	}
 }
 
@@ -356,20 +523,6 @@ if ( ! function_exists('class_uses_recursive'))
 		}
 
 		return array_unique($results);
-	}
-}
-
-if ( ! function_exists('collect'))
-{
-	/**
-	 * Create a collection from the given value.
-	 *
-	 * @param  mixed  $value
-	 * @return \Illuminate\Support\Collection
-	 */
-	function collect($value = null)
-	{
-		return new Collection($value);
 	}
 }
 
@@ -426,22 +579,6 @@ if ( ! function_exists('data_get'))
 	}
 }
 
-if ( ! function_exists('dd'))
-{
-	/**
-	 * Dump the passed variables and end the script.
-	 *
-	 * @param  mixed
-	 * @return void
-	 */
-	function dd()
-	{
-		array_map(function($x) { (new Dumper)->dump($x); }, func_get_args());
-
-		die;
-	}
-}
-
 if ( ! function_exists('e'))
 {
 	/**
@@ -467,7 +604,12 @@ if ( ! function_exists('ends_with'))
 	 */
 	function ends_with($haystack, $needles)
 	{
-		return Str::endsWith($haystack, $needles);
+		foreach ((array) $needles as $needle)
+		{
+			if ((string) $needle === substr($haystack, -strlen($needle))) return true;
+		}
+
+		return false;
 	}
 }
 
@@ -539,7 +681,7 @@ if ( ! function_exists('preg_replace_sub'))
 	 */
 	function preg_replace_sub($pattern, &$replacements, $subject)
 	{
-		return preg_replace_callback($pattern, function($match) use (&$replacements)
+		return preg_replace_callback($pattern, function() use (&$replacements)
 		{
 			return array_shift($replacements);
 
@@ -558,7 +700,20 @@ if ( ! function_exists('snake_case'))
 	 */
 	function snake_case($value, $delimiter = '_')
 	{
-		return Str::snake($value, $delimiter);
+		$snakeCache = [];
+		$key = $value.$delimiter;
+
+		if (isset($snakeCache[$key]))
+		{
+			return $snakeCache[$key];
+		}
+
+		if ( ! ctype_lower($value))
+		{
+			$value = strtolower(preg_replace('/(.)(?=[A-Z])/', '$1'.$delimiter, $value));
+		}
+
+		return $snakeCache[$key] = $value;
 	}
 }
 
@@ -573,7 +728,12 @@ if ( ! function_exists('starts_with'))
 	 */
 	function starts_with($haystack, $needles)
 	{
-		return Str::startsWith($haystack, $needles);
+		foreach ((array) $needles as $needle)
+		{
+			if ($needle != '' && strpos($haystack, $needle) === 0) return true;
+		}
+
+		return false;
 	}
 }
 
@@ -588,7 +748,12 @@ if ( ! function_exists('str_contains'))
 	 */
 	function str_contains($haystack, $needles)
 	{
-		return Str::contains($haystack, $needles);
+		foreach ((array) $needles as $needle)
+		{
+			if ($needle != '' && strpos($haystack, $needle) !== false) return true;
+		}
+
+		return false;
 	}
 }
 
@@ -603,7 +768,9 @@ if ( ! function_exists('str_finish'))
 	 */
 	function str_finish($value, $cap)
 	{
-		return Str::finish($value, $cap);
+		$quoted = preg_quote($cap, '/');
+
+		return preg_replace('/(?:'.$quoted.')+$/', '', $value).$cap;
 	}
 }
 
@@ -618,7 +785,16 @@ if ( ! function_exists('str_is'))
 	 */
 	function str_is($pattern, $value)
 	{
-		return Str::is($pattern, $value);
+		if ($pattern == $value) return true;
+
+		$pattern = preg_quote($pattern, '#');
+
+		// Asterisks are translated into zero-or-more regular expression wildcards
+		// to make it convenient to check if the strings starts with the given
+		// pattern such as "library/*", making any string check convenient.
+		$pattern = str_replace('\*', '.*', $pattern).'\z';
+
+		return (bool) preg_match('#^'.$pattern.'#', $value);
 	}
 }
 
@@ -634,22 +810,9 @@ if ( ! function_exists('str_limit'))
 	 */
 	function str_limit($value, $limit = 100, $end = '...')
 	{
-		return Str::limit($value, $limit, $end);
-	}
-}
+		if (mb_strlen($value) <= $limit) return $value;
 
-if ( ! function_exists('str_plural'))
-{
-	/**
-	 * Get the plural form of an English word.
-	 *
-	 * @param  string  $value
-	 * @param  int     $count
-	 * @return string
-	 */
-	function str_plural($value, $count = 2)
-	{
-		return Str::plural($value, $count);
+		return rtrim(mb_substr($value, 0, $limit, 'UTF-8')).$end;
 	}
 }
 
@@ -665,7 +828,19 @@ if ( ! function_exists('str_random'))
 	 */
 	function str_random($length = 16)
 	{
-		return Str::random($length);
+		if ( ! function_exists('openssl_random_pseudo_bytes'))
+		{
+			throw new RuntimeException('OpenSSL extension is required.');
+		}
+
+		$bytes = openssl_random_pseudo_bytes($length * 2);
+
+		if ($bytes === false)
+		{
+			throw new RuntimeException('Unable to generate random string.');
+		}
+
+		return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
 	}
 }
 
@@ -690,35 +865,6 @@ if ( ! function_exists('str_replace_array'))
 	}
 }
 
-if ( ! function_exists('str_singular'))
-{
-	/**
-	 * Get the singular form of an English word.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	function str_singular($value)
-	{
-		return Str::singular($value);
-	}
-}
-
-if ( ! function_exists('str_slug'))
-{
-	/**
-	 * Generate a URL friendly "slug" from a given string.
-	 *
-	 * @param  string  $title
-	 * @param  string  $separator
-	 * @return string
-	 */
-	function str_slug($title, $separator = '-')
-	{
-		return Str::slug($title, $separator);
-	}
-}
-
 if ( ! function_exists('studly_case'))
 {
 	/**
@@ -729,7 +875,17 @@ if ( ! function_exists('studly_case'))
 	 */
 	function studly_case($value)
 	{
-		return Str::studly($value);
+		$studlyCache = [];
+		$key = $value;
+
+		if (isset($studlyCache[$key]))
+		{
+			return $studlyCache[$key];
+		}
+
+		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
+
+		return $studlyCache[$key] = str_replace(' ', '', $value);
 	}
 }
 
@@ -779,5 +935,186 @@ if ( ! function_exists('with'))
 	function with($object)
 	{
 		return $object;
+	}
+}
+
+/**
+ * Helper functions for the helper functions, that can still be used standalone
+ */
+if ( ! function_exists('studly'))
+{
+	/**
+	 * Convert a value to studly caps case.
+	 *
+	 * @param  string  $value
+	 * @return string
+	 */
+	function studly($value)
+	{
+		$studlyCache = [];
+		$key = $value;
+
+		if (isset($studlyCache[$key]))
+		{
+			return $studlyCache[$key];
+		}
+
+		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
+
+		return $studlyCache[$key] = str_replace(' ', '', $value);
+	}
+}
+
+if ( ! function_exists('get'))
+{
+	/**
+	 * Get an item from an array using "dot" notation.
+	 *
+	 * @param  array   $array
+	 * @param  string  $key
+	 * @param  mixed   $default
+	 * @return mixed
+	 */
+	function get($array, $key, $default = null)
+	{
+		if (is_null($key)) return $array;
+
+		if (isset($array[$key])) return $array[$key];
+
+		foreach (explode('.', $key) as $segment)
+		{
+			if ( ! is_array($array) || ! array_key_exists($segment, $array))
+			{
+				return value($default);
+			}
+
+			$array = $array[$segment];
+		}
+
+		return $array;
+	}
+}
+
+if ( ! function_exists('set'))
+{
+	/**
+	 * Set an array item to a given value using "dot" notation.
+	 *
+	 * If no key is given to the method, the entire array will be replaced.
+	 *
+	 * @param  array   $array
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return array
+	 */
+	function set(&$array, $key, $value)
+	{
+		if (is_null($key)) return $array = $value;
+
+		$keys = explode('.', $key);
+
+		while (count($keys) > 1)
+		{
+			$key = array_shift($keys);
+
+			// If the key doesn't exist at this depth, we will just create an empty array
+			// to hold the next value, allowing us to create the arrays to hold final
+			// values at the correct depth. Then we'll keep digging into the array.
+			if ( ! isset($array[$key]) || ! is_array($array[$key]))
+			{
+				$array[$key] = array();
+			}
+
+			$array =& $array[$key];
+		}
+
+		$array[array_shift($keys)] = $value;
+
+		return $array;
+	}
+}
+
+if ( ! function_exists('dot'))
+{
+	/**
+	 * Flatten a multi-dimensional associative array with dots.
+	 *
+	 * @param  array   $array
+	 * @param  string  $prepend
+	 * @return array
+	 */
+	function dot($array, $prepend = '')
+	{
+		$results = array();
+
+		foreach ($array as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$results = array_merge($results, dot($value, $prepend.$key.'.'));
+			}
+			else
+			{
+				$results[$prepend.$key] = $value;
+			}
+		}
+
+		return $results;
+	}
+}
+
+if ( ! function_exists('first'))
+{
+	/**
+	 * Return the first element in an array passing a given truth test.
+	 *
+	 * @param  array     $array
+	 * @param  \Closure  $callback
+	 * @param  mixed     $default
+	 * @return mixed
+	 */
+	function first($array, $callback, $default = null)
+	{
+		foreach ($array as $key => $value)
+		{
+			if (call_user_func($callback, $key, $value)) return $value;
+		}
+
+		return value($default);
+	}
+}
+
+if ( ! function_exists('forget'))
+{
+	/**
+	 * Remove one or many array items from a given array using "dot" notation.
+	 *
+	 * @param  array  $array
+	 * @param  array|string  $keys
+	 * @return void
+	 */
+	function forget(&$array, $keys)
+	{
+		$original =& $array;
+
+		foreach ((array) $keys as $key)
+		{
+			$parts = explode('.', $key);
+
+			while (count($parts) > 1)
+			{
+				$part = array_shift($parts);
+
+				if (isset($array[$part]) && is_array($array[$part]))
+				{
+					$array =& $array[$part];
+				}
+			}
+
+			unset($array[array_shift($parts)]);
+
+			// clean up after each pass
+			$array =& $original;
+		}
 	}
 }
