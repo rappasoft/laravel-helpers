@@ -1,8 +1,5 @@
 ## Laravel 5 Helpers for Non-Laravel Projects
 
-[![Project Status](https://stillmaintained.com/rappasoft/laravel-helpers.png)](https://stillmaintained.com/rappasoft/laravel-helpers)
-[![Total Downloads](https://poser.pugx.org/rappasoft/laravel-helpers/downloads.svg)](https://packagist.org/packages/rappasoft/laravel-helpers)
-
 This project takes the useful [Laravel helper functions](http://laravel.com/docs/5.0/helpers) and allows you to use them in Non-Laravel projects.
 
 All dependencies have been extracted out to a single helpers file. No need to import half of Symphony and Laravel to make these work.
