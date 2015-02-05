@@ -12,4 +12,21 @@ In the `require` key of `composer.json` file add the following
 
 ## Documentation
 
-    Coming Soon
+* [Methods](#methods)
+    * [append_config](#append_config)
+    
+<a name="methods"/>
+## Methods
+
+<a name="append_config"/>
+### append_config
+
+```php
+/**
+	 * Assign high numeric IDs to a config item to force appending.
+	 *
+	 * @param  array  $array
+	 * @return array
+*/
+function append_config(array $array)
+```
