@@ -468,27 +468,6 @@ if ( ! function_exists('camel_case'))
 	}
 }
 
-if ( ! function_exists('camel_case'))
-{
-	/**
-	 * Convert a value to camel case.
-	 *
-	 * @param  string  $value
-	 * @return string
-	 */
-	function camel_case($value)
-	{
-		$camelCache = [];
-
-		if (isset($camelCache[$value]))
-		{
-			return $camelCache[$value];
-		}
-
-		return $camelCache[$value] = lcfirst(studly($value));
-	}
-}
-
 if ( ! function_exists('class_basename'))
 {
 	/**

@@ -31,6 +31,31 @@ In the `require` key of `composer.json` file add the following
     * [array_pull](#array_pull)
     * [array_set](#array_set)
     * [array_where](#array_where)
+    * [head](#head)
+    * [last](#last)
+* [Strings](#strings)
+    * [camel_case](#camel_case)
+    * [ends_with](#ends_with)
+    * [preg_replace_sub](#preg_replace_sub)
+    * [snake_case](#snake_case)
+    * [starts_with](#starts_with)
+    * [str_contains](#str_contains)
+    * [str_finish](#str_finish)
+    * [str_is](#str_is)
+    * [str_limit](#str_limit)
+    * [str_random](#str_random)
+    * [str_replace_array](#str_replace_array)
+    * [studly_case](#studly_case)
+* [Classes](#classes)
+    * [class_basename](#class_basename)
+    * [class_uses_recursive](#class_uses_recursive)
+    * [trait_uses_recursive](#trait_uses_recursive)
+* [Misc.](#misc)
+    * [data_get](#data_get)
+    * [e](#e)
+    * [object_get](#object_get)
+    * [value](#value)
+    * [with](#with)
     
 <a name="arrays"/>
 ## Arrays
@@ -291,4 +316,317 @@ function array_set(&$array, $key, $value)
 	 * @return array
 */
 function array_where($array, Closure $callback)
+```
+
+<a name="head"/>
+### head
+
+```php
+/**
+	 * Get the first element of an array. Useful for method chaining.
+	 *
+	 * @param  array  $array
+	 * @return mixed
+*/
+function head($array)
+```
+
+<a name="last"/>
+### last
+
+```php
+/**
+	 * Get the last element from an array.
+	 *
+	 * @param  array  $array
+	 * @return mixed
+*/
+function last($array)
+```
+
+<a name="strings"/>
+## Strings
+
+<a name="camel_case"/>
+### camel_case
+
+```php
+/**
+	 * Convert a value to camel case.
+	 *
+	 * @param  string  $value
+	 * @return string
+*/
+function camel_case($value)
+```
+
+<a name="ends_with"/>
+### ends_with
+
+```php
+/**
+	 * Determine if a given string ends with a given substring.
+	 *
+	 * @param  string  $haystack
+	 * @param  string|array  $needles
+	 * @return bool
+*/
+function ends_with($haystack, $needles)
+```
+
+<a name="preg_replace_sub"/>
+### preg_replace_sub
+
+```php
+/**
+	 * Replace a given pattern with each value in the array in sequentially.
+	 *
+	 * @param  string  $pattern
+	 * @param  array   $replacements
+	 * @param  string  $subject
+	 * @return string
+*/
+function preg_replace_sub($pattern, &$replacements, $subject)
+```
+
+<a name="snake_case"/>
+### snake_case
+
+```php
+/**
+	 * Convert a string to snake case.
+	 *
+	 * @param  string  $value
+	 * @param  string  $delimiter
+	 * @return string
+*/
+function snake_case($value, $delimiter = '_')
+```
+
+<a name="starts_with"/>
+### starts_with
+
+```php
+/**
+	 * Determine if a given string starts with a given substring.
+	 *
+	 * @param  string  $haystack
+	 * @param  string|array  $needles
+	 * @return bool
+*/
+function starts_with($haystack, $needles)
+```
+
+<a name="str_contains"/>
+### str_contains
+
+```php
+/**
+	 * Determine if a given string contains a given substring.
+	 *
+	 * @param  string  $haystack
+	 * @param  string|array  $needles
+	 * @return bool
+*/
+function str_contains($haystack, $needles)
+```
+
+<a name="str_finish"/>
+### str_finish
+
+```php
+/**
+	 * Cap a string with a single instance of a given value.
+	 *
+	 * @param  string  $value
+	 * @param  string  $cap
+	 * @return string
+*/
+function str_finish($value, $cap)
+```
+
+<a name="str_is"/>
+### str_is
+
+```php
+/**
+	 * Determine if a given string matches a given pattern.
+	 *
+	 * @param  string  $pattern
+	 * @param  string  $value
+	 * @return bool
+*/
+function str_is($pattern, $value)
+```
+
+<a name="str_limit"/>
+### str_limit
+
+```php
+/**
+	 * Limit the number of characters in a string.
+	 *
+	 * @param  string  $value
+	 * @param  int     $limit
+	 * @param  string  $end
+	 * @return string
+*/
+function str_limit($value, $limit = 100, $end = '...')
+```
+
+<a name="str_random"/>
+### str_random
+
+```php
+/**
+	 * Generate a more truly "random" alpha-numeric string.
+	 *
+	 * @param  int  $length
+	 * @return string
+	 *
+	 * @throws \RuntimeException
+*/
+function str_random($length = 16)
+```
+
+<a name="str_replace_array"/>
+### str_replace_array
+
+```php
+/**
+	 * Replace a given value in the string sequentially with an array.
+	 *
+	 * @param  string  $search
+	 * @param  array   $replace
+	 * @param  string  $subject
+	 * @return string
+*/
+function str_replace_array($search, array $replace, $subject)
+```
+
+<a name="studly_case"/>
+### studly_case
+
+```php
+/**
+	 * Convert a value to studly caps case.
+	 *
+	 * @param  string  $value
+	 * @return string
+*/
+function studly_case($value)
+```
+
+<a name="classes"/>
+## Classes
+
+<a name="class_basename"/>
+### class_basename
+
+```php
+/**
+	 * Get the class "basename" of the given object / class.
+	 *
+	 * @param  string|object  $class
+	 * @return string
+*/
+function class_basename($class)
+```
+
+<a name="class_uses_recursive"/>
+### class_uses_recursive
+
+```php
+/**
+	 * Returns all traits used by a class, it's subclasses and trait of their traits
+	 *
+	 * @param  string  $class
+	 * @return array
+*/
+function class_uses_recursive($class)
+```
+
+<a name="trait_uses_recursive"/>
+### trait_uses_recursive
+
+```php
+/**
+	 * Returns all traits used by a trait and its traits
+	 *
+	 * @param  string  $trait
+	 * @return array
+*/
+function trait_uses_recursive($trait)
+```
+
+<a name="misc"/>
+## Misc.
+
+<a name="data_get"/>
+### data_get
+
+```php
+/**
+	 * Get an item from an array or object using "dot" notation.
+	 *
+	 * @param  mixed   $target
+	 * @param  string  $key
+	 * @param  mixed   $default
+	 * @return mixed
+*/
+function data_get($target, $key, $default = null)
+```
+
+<a name="e"/>
+### e
+
+```php
+/**
+	 * Escape HTML entities in a string.
+	 *
+	 * @param  string  $value
+	 * @return string
+*/
+function e($value)
+```
+
+<a name="object_get"/>
+### object_get
+
+```php
+/**
+	 * Get an item from an object using "dot" notation.
+	 *
+	 * @param  object  $object
+	 * @param  string  $key
+	 * @param  mixed   $default
+	 * @return mixed
+*/
+function object_get($object, $key, $default = null)
+```
+
+<a name="value"/>
+### value
+
+```php
+/**
+	 * Return the default value of the given value.
+	 *
+	 * @param  mixed  $value
+	 * @return mixed
+*/
+function value($value)
+```
+
+<a name="with"/>
+### with
+
+```php
+/**
+	 * Return the given object. Useful for chaining.
+	 *
+	 * @param  mixed  $object
+	 * @return mixed
+*/
+function with($object)
 ```
