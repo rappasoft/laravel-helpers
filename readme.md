@@ -34,7 +34,9 @@ In the `require` key of `composer.json` file add the following
     * [head](#head)
     * [last](#last)
 * [Strings](#strings)
+    * [ascii](#ascii)
     * [camel_case](#camel_case)
+    * [charsArray](#charsArray)
     * [ends_with](#ends_with)
     * [preg_replace_sub](#preg_replace_sub)
     * [snake_case](#snake_case)
@@ -45,6 +47,7 @@ In the `require` key of `composer.json` file add the following
     * [str_limit](#str_limit)
     * [str_random](#str_random)
     * [str_replace_array](#str_replace_array)
+    * [str_slug](#str_slug)
     * [studly_case](#studly_case)
 * [Classes](#classes)
     * [class_basename](#class_basename)
@@ -347,6 +350,19 @@ function last($array)
 <a name="strings"/>
 ## Strings
 
+<a name="ascii"/>
+### ascii
+
+```php
+/**
+     * Transliterate a UTF-8 value to ASCII.
+     *
+     * @param  string  $value
+     * @return string
+ */
+function ascii($value)
+```
+
 <a name="camel_case"/>
 ### camel_case
 
@@ -358,6 +374,22 @@ function last($array)
 	 * @return string
 */
 function camel_case($value)
+```
+
+<a name="charsArray"/>
+### charsArray
+
+```php
+/**
+     * Returns the replacements for the ascii method.
+     *
+     * Note: Adapted from Stringy\Stringy.
+     *
+     * @see https://github.com/danielstjules/Stringy/blob/2.3.1/LICENSE.txt
+     *
+     * @return array
+ */
+function charsArray()
 ```
 
 <a name="ends_with"/>
@@ -502,6 +534,20 @@ function str_random($length = 16)
 	 * @return string
 */
 function str_replace_array($search, array $replace, $subject)
+```
+
+<a name="str_slug"/>
+### str_slug
+
+```php
+/**
+	 * Generate a URL friendly "slug" from a given string.
+	 *
+	 * @param  string  $title
+	 * @param  string  $separator
+	 * @return string
+*/
+function str_slug(string $title, string $separator = '-')
 ```
 
 <a name="studly_case"/>
