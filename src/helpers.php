@@ -1051,6 +1051,19 @@ if ( ! function_exists('studly_case'))
     }
 }
 
+if (! function_exists('title_case')) {
+    /**
+     * Convert a value to title case.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    function title_case($value)
+    {
+        return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+    }
+}
+
 if ( ! function_exists('trait_uses_recursive'))
 {
     /**
@@ -1278,5 +1291,45 @@ if ( ! function_exists('forget'))
             // clean up after each pass
             $array =& $original;
         }
+    }
+}
+
+if (! function_exists('bcrypt')) {
+    /**
+     * Password hash the given value.
+     *
+     * @param  string  $value
+     * @param  array   $options
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    function bcrypt($value, $options = [])
+    {
+        $cost = isset($options['rounds']) ? $options['rounds'] : 10;
+
+        $hashedValue = password_hash($value, PASSWORD_BCRYPT, ['cost' => $cost]);
+
+        if ($hashedValue === false) {
+            throw new RuntimeException('Bcrypt hashing not supported.');
+        }
+
+        return $hashedValue;
+    }
+}
+
+if (! function_exists('tap')) {
+    /**
+     * Call the given Closure with the given value then return the value.
+     *
+     * @param  mixed  $value
+     * @param  callable  $callback
+     * @return mixed
+     */
+    function tap($value, $callback)
+    {
+        $callback($value);
+
+        return $value;
     }
 }
