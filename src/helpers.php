@@ -1333,3 +1333,17 @@ if (! function_exists('tap')) {
         return $value;
     }
 }
+
+if (! function_exists('dd')) {
+    /**
+     * Dump the passed variables and end the script.
+     *
+     * @param  mixed  $args
+     * @return void
+     */
+    function dd($arg = '')
+    {
+	    var_dump($args);
+	    exit();
+    }
+}
