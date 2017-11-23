@@ -59,6 +59,7 @@ In the `require` key of `composer.json` file add the following
     * [object_get](#object_get)
     * [value](#value)
     * [with](#with)
+    * [dd](#dd)
     
 ## Arrays
 <a name="arrays"/>
@@ -675,4 +676,17 @@ function value($value)
 	 * @return mixed
 */
 function with($object)
+```
+
+### dd
+<a name="dd"/>
+
+```php
+ /**
+ 	* Dump the passed variables and end the script.
+	*
+	* @param  mixed  $args
+	* @return void
+*/
+function dd($arg = '')
 ```
