@@ -1338,12 +1338,15 @@ if (! function_exists('dd')) {
     /**
      * Dump the passed variables and end the script.
      *
-     * @param  mixed  $args
+     * @param  mixed
      * @return void
      */
-    function dd($arg = '')
+    function dd()
     {
-	    var_dump($args);
-	    exit();
+        array_map(function($x) {
+            var_dump($x);
+        }, func_get_args());
+        
+        die(1);
     }
 }
