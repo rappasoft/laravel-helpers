@@ -6,7 +6,7 @@ All dependencies have been extracted out to a single helpers file. No need to im
 
 ## Setup
 
-In the `require` key of `composer.json` file add the following
+Run the following in your project root:
 
     composer require rappasoft/laravel-helpers
 
