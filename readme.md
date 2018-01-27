@@ -688,5 +688,5 @@ function with($object)
 	* @param  mixed  $args
 	* @return void
 */
-function dd($arg = '')
+function dd($arg...)
 ```
