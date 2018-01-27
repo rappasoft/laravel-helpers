@@ -8,7 +8,7 @@ All dependencies have been extracted out to a single helpers file. No need to im
 
 In the `require` key of `composer.json` file add the following
 
-    "rappasoft/laravel-helpers": "dev-master"
+    composer require rappasoft/laravel-helpers
 
 ## Documentation
 
