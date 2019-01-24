@@ -55,6 +55,8 @@ Run the following in your project root:
     * [trait_uses_recursive](#trait_uses_recursive)
 * [Misc.](#misc)
     * [data_get](#data_get)
+    * [data_set](#data_set)
+    * [data_fill](#data_fill)
     * [e](#e)
     * [object_get](#object_get)
     * [value](#value)
@@ -689,4 +691,35 @@ function with($object)
 	* @return void
 */
 function dd($arg...)
+```
+
+### data_set
+<a name="data_set"/>
+
+```php
+ /**
+      * Set an item on an array or object using dot notation.
+      *
+      * @param  mixed  $target
+      * @param  string|array  $key
+      * @param  mixed  $value
+      * @param  bool  $overwrite
+      * @return mixed
+ */
+ function data_set(&$target, $key, $value, $overwrite = true)
+```
+
+### data_fill
+<a name="data_fill"/>
+
+```php
+/**
+     * Fill in data where it's missing.
+     *
+     * @param  mixed   $target
+     * @param  string|array  $key
+     * @param  mixed  $value
+     * @return mixed
+*/
+function data_fill(&$target, $key, $value)
 ```
