@@ -4,6 +4,10 @@ This project takes the useful [Laravel helper functions](http://laravel.com/docs
 
 All dependencies have been extracted out to a single helpers file. No need to import half of Symphony and Laravel to make these work.
 
+## License
+
+Since the Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT), this project is licensed under the same license.
+
 ## Setup
 
 Run the following in your project root:
