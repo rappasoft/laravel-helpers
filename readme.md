@@ -23,7 +23,7 @@ Run the following in your project root:
     * [array_first](#array_first)
     * [array_last](#array_last)
     * [array_flatten](#array_flatten)
-    * [array_forgot](#array_forgot)
+    * [array_forget](#array_forget)
     * [array_get](#array_get)
     * [array_has](#array_has)
     * [array_only](#array_only)
@@ -204,8 +204,8 @@ function array_last($array, $callback, $default = null)
 function array_flatten($array)
 ```
 
-### array_forgot
-<a name="array_forgot"/>
+### array_forget
+<a name="array_forget"/>
 
 ```php
 /**
