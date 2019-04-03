@@ -4,6 +4,10 @@ This project takes the useful [Laravel helper functions](http://laravel.com/docs
 
 All dependencies have been extracted out to a single helpers file. No need to import half of Symphony and Laravel to make these work.
 
+## License
+
+Since the Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT), this project is licensed under the same license.
+
 ## Setup
 
 Run the following in your project root:
@@ -23,7 +27,7 @@ Run the following in your project root:
     * [array_first](#array_first)
     * [array_last](#array_last)
     * [array_flatten](#array_flatten)
-    * [array_forgot](#array_forgot)
+    * [array_forget](#array_forget)
     * [array_get](#array_get)
     * [array_has](#array_has)
     * [array_only](#array_only)
@@ -55,6 +59,8 @@ Run the following in your project root:
     * [trait_uses_recursive](#trait_uses_recursive)
 * [Misc.](#misc)
     * [data_get](#data_get)
+    * [data_set](#data_set)
+    * [data_fill](#data_fill)
     * [e](#e)
     * [object_get](#object_get)
     * [value](#value)
@@ -204,8 +210,8 @@ function array_last($array, $callback, $default = null)
 function array_flatten($array)
 ```
 
-### array_forgot
-<a name="array_forgot"/>
+### array_forget
+<a name="array_forget"/>
 
 ```php
 /**
@@ -689,4 +695,35 @@ function with($object)
 	* @return void
 */
 function dd($arg...)
+```
+
+### data_set
+<a name="data_set"/>
+
+```php
+ /**
+      * Set an item on an array or object using dot notation.
+      *
+      * @param  mixed  $target
+      * @param  string|array  $key
+      * @param  mixed  $value
+      * @param  bool  $overwrite
+      * @return mixed
+ */
+ function data_set(&$target, $key, $value, $overwrite = true)
+```
+
+### data_fill
+<a name="data_fill"/>
+
+```php
+/**
+     * Fill in data where it's missing.
+     *
+     * @param  mixed   $target
+     * @param  string|array  $key
+     * @param  mixed  $value
+     * @return mixed
+*/
+function data_fill(&$target, $key, $value)
 ```
