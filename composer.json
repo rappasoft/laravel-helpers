@@ -2,7 +2,7 @@
     "name": "rappasoft/laravel-helpers",
     "description": "Laravel Helpers for Non-Laravel Projects",
     "license": "MIT",
-    "keywords": ["laravel", "helpers"],
+    "keywords": ["laravel", "helpers", "string helpers", "array helpers"],
     "authors": [
         {
             "name": "Anthony Rappa",
@@ -10,11 +10,14 @@
         }
     ],
     "require": {
-    	"php": ">=5.4.0"
+        "php": "^7.3|^8.0"
     },
     "autoload": {
         "files": [
-            "src/helpers.php"
+            "src/arrays.php",
+            "src/classes.php",
+            "src/helpers.php",
+            "src/strings.php"
         ]
     },
     "minimum-stability": "stable"
