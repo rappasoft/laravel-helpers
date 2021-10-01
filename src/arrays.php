@@ -667,7 +667,7 @@ if (! function_exists('array_sort_recursive')) {
      *
      * @return array
      */
-    function array_sort_recursive(array $array, int $options = SORT_REGULAR, bool $descending): array
+    function array_sort_recursive(array $array, int $options = SORT_REGULAR, bool $descending = true): array
     {
         foreach ($array as &$value) {
             if (is_array($value)) {
