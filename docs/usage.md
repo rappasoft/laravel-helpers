@@ -475,6 +475,19 @@ function head(array $array)
 function last(array $array)
 ```
 
+### to_array
+
+```php
+/**
+ * Convert Json into Array.
+ *
+ * @param  string  $json
+ *
+ * @return array
+ */
+function to_array(string $json)
+```
+
 ## Strings
 
 ### preg_replace_array
@@ -919,7 +932,7 @@ function str_starts_with(string $haystack, $needles): bool
 ### str_studly
 
 ```php
- /**
+/**
  * Convert a value to studly caps case.
  *
  * @param  string  $value
@@ -932,7 +945,7 @@ function str_studly(string $value): string
 ### str_pascal
 
 ```php
- /**
+/**
  * Convert a string to pascal case.
  *
  * @param  string  $value
@@ -940,6 +953,43 @@ function str_studly(string $value): string
  * @return string
  */
 function str_pascal(string $value): string
+```
+
+### str_camel
+
+```php
+/**
+ * Convert a string to cameel case.
+ *
+ * @param  string  $value
+ *
+ * @return string
+ */
+function str_camel(string $value): string
+```
+
+### str_uuid4
+
+```php
+/**
+ * Generate a UUID (version 4).
+ *
+ * @return string
+ */
+function str_uuid4(): string
+```
+
+### str_jwt
+
+```php
+/**
+ * Generate a JWT.
+ *
+ * @param  array  $payload
+ *
+ * @return string
+ */
+function str_jwt(array $payload): string
 ```
 
 ## Classes
