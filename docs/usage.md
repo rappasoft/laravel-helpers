@@ -16,7 +16,7 @@ weight: 5
  * @return bool
  */
 function array_accessible($value): bool
-``````
+```
 
 ### array_add
 
@@ -31,7 +31,7 @@ function array_accessible($value): bool
  * @return array
  */
 function array_add(array $array, string $key, $value): array
-````
+```
 
 ### array_collapse
 
@@ -44,7 +44,7 @@ function array_add(array $array, string $key, $value): array
  * @return array
  */
 function array_collapse(iterable $array): array
-````
+```
 
 ### array_cross_join
 
@@ -57,7 +57,7 @@ function array_collapse(iterable $array): array
  * @return array
  */
 function array_cross_join(...$arrays): array
-````
+```
 
 ### array_divide
 
@@ -70,7 +70,7 @@ function array_cross_join(...$arrays): array
  * @return array
  */
 function array_divide(array $array): array
-````
+```
 
 ### array_dot
 
@@ -84,7 +84,7 @@ function array_divide(array $array): array
  * @return array
  */
 function array_dot(iterable $array, string $prepend = ''): array
-````
+```
 
 ### array_except
 
@@ -98,7 +98,7 @@ function array_dot(iterable $array, string $prepend = ''): array
  * @return array
  */
 function array_except(array $array, $keys): array
-````
+```
 
 ### array_exists
 
@@ -112,7 +112,7 @@ function array_except(array $array, $keys): array
  * @return bool
  */
 function array_exists($array, $key): bool
-````
+```
 
 ### array_first
 
@@ -127,7 +127,7 @@ function array_exists($array, $key): bool
  * @return mixed
  */
 function array_first(iterable $array, callable $callback = null, $default = null)
-````
+```
 
 ### array_last
 
@@ -142,7 +142,7 @@ function array_first(iterable $array, callable $callback = null, $default = null
  * @return mixed
  */
 function array_last(array $array, callable $callback = null, $default = null)
-````
+```
 
 ### array_flatten
 
@@ -403,7 +403,7 @@ function array_where(array $array, callable $callback): array
  * @return array
  */
 function array_wrap($value): array
-````
+```
 
 ### data_fill
 
@@ -474,7 +474,6 @@ function head(array $array)
  */
 function last(array $array)
 ```
-
 
 ## Strings
 
@@ -930,6 +929,19 @@ function str_starts_with(string $haystack, $needles): bool
 function str_studly(string $value): string
 ```
 
+### str_pascal
+
+```php
+ /**
+ * Convert a string to pascal case.
+ *
+ * @param  string  $value
+ *
+ * @return string
+ */
+function str_pascal(string $value): string
+```
+
 ## Classes
 
 ### class_basename
@@ -1047,4 +1059,3 @@ function value($value)
  */
 function with($object)
 ```
-

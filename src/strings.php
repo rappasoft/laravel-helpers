@@ -668,3 +668,21 @@ if (! function_exists('str_studly')) {
         return $studlyCache[$key] = str_replace(' ', '', $value);
     }
 }
+
+if (! function_exists('str_pascal')) {
+    /**
+     * Convert a string to pascal case.
+     *
+     * @param  string  $value
+     *
+     * @return string
+     */
+    function str_pascal(string $value): string
+    {
+        $words = [];
+        
+        $words = preg_replace('/[\p{P}]/u', ' ', $value);
+    	
+    	return str_replace(' ', '', ucwords($words));
+    }
+}
