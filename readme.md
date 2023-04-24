@@ -7,6 +7,8 @@
 
 This project takes the useful [Laravel helper functions](https://laravel.com/docs/8.x/helpers#introduction) and allows you to use them in Non-Laravel projects.
 
+### Enjoying this package? [Buy me a beer 🍺](https://www.buymeacoffee.com/rappasoft)
+
 ## Installation
 
 ```
