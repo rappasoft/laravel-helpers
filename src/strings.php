@@ -668,3 +668,75 @@ if (! function_exists('str_studly')) {
         return $studlyCache[$key] = str_replace(' ', '', $value);
     }
 }
+
+if (! function_exists('str_pascal')) {
+    /**
+     * Convert a string to pascal case.
+     *
+     * @param  string  $value
+     *
+     * @return string
+     */
+    function str_pascal(string $value): string
+    {
+        $words = preg_replace('/[\p{P}]/u', ' ', $value);
+    	
+    	return str_replace(' ', '', ucwords($words));
+    }
+}
+
+if (! function_exists('str_camel')) {
+    /**
+     * Convert a string to camel case.
+     *
+     * @param  string  $value
+     *
+     * @return string
+     */
+    function str_camel(string $value): string
+    {
+        return lcfirst(str_pascal($value));
+    }
+}
+
+if (! function_exists('str_uuid4')) {
+    /**
+     * Generate a UUID (version 4).
+     *
+     * @return string
+     */
+    function str_uuid4() {
+        $bytes = random_bytes(16);
+
+        $bytes[6] = chr(ord($bytes[6]) & 0x0f | 0x40);
+        $bytes[8] = chr(ord($bytes[8]) & 0x3f | 0x80);
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
+    }
+}
+
+if (! function_exists('str_jwt')) {
+    /**
+     * Generate a JWT.
+     * 
+     * @param  array  $payload
+     *
+     * @return string
+     */
+    function str_jwt(array $payload) {
+        $patterns = ['+', '/', '='];
+
+		$replacements = ['-', '_', ''];
+
+        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
+        $chain[] = str_replace($patterns, $replacements, base64_encode($header));
+
+        $payload = json_encode($payload);
+        $chain[] = str_replace($patterns, $replacements, base64_encode($payload));
+
+        $signature = hash_hmac('sha256', $chain[0] . "." . $chain[1], 'abC123!', true);
+        $chain[] = str_replace($patterns, $replacements, base64_encode($signature));
+
+        return implode('.', $chain);
+    }
+}

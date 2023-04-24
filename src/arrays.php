@@ -904,3 +904,17 @@ if (! function_exists('last')) {
         return end($array);
     }
 }
+
+if (! function_exists('to_array')) {
+    /**
+     * Convert Json into Array.
+     *
+     * @param  string  $json
+     *
+     * @return array
+     */
+    function to_array(string $json)
+    {
+        return (array)json_decode($json);
+    }
+}
