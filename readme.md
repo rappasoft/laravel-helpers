@@ -5,7 +5,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rappasoft/laravel-helpers.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-helpers)
 [![Total Downloads](https://img.shields.io/packagist/dt/rappasoft/laravel-helpers.svg?style=flat-square)](https://packagist.org/packages/rappasoft/laravel-helpers)
 
-This project takes the useful [Laravel helper functions](https://laravel.com/docs/helpers) and allows you to use them in Non-Laravel projects. Updated for compatibility with Laravel 10 and 11.
+This project takes the useful [Laravel helper functions](https://laravel.com/docs/helpers) and allows you to use them in Non-Laravel projects. Updated for compatibility with Laravel 10, 11, and 12.
 
 ### Enjoying this package? [Buy me a beer 🍺](https://www.buymeacoffee.com/rappasoft)
 
