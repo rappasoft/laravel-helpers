@@ -1,0 +1,62 @@
+name: Tests
+
+on:
+    push:
+        branches: [main, develop, master]
+    pull_request:
+        branches: [main, develop, master]
+
+jobs:
+    test:
+        name: PHP ${{ matrix.php-version }} on ${{ matrix.os }}
+
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - ubuntu-latest
+                    - macos-latest
+                php-version:
+                    - "8.1"
+                    - "8.2"
+                    - "8.3"
+                    - "8.4"
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-version }}
+                  coverage: none
+                  tools: composer
+
+            - name: Validate composer.json and composer.lock
+              run: composer validate --strict
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.composer/cache
+                  key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
+
+            - name: Install dependencies
+              run: composer install --prefer-dist --no-progress --no-interaction
+
+            - name: Run tests
+              run: vendor/bin/phpunit
+
+            - name: Upload test results
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: test-results-php-${{ matrix.php-version }}-${{ matrix.os }}
+                  path: |
+                      .phpunit.cache
+                  retention-days: 7
