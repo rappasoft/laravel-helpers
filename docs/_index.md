@@ -1,6 +1,6 @@
 ---
-title: v2
-slogan: This project takes the useful Laravel helper functions and allows you to use them in Non-Laravel projects.
+title: Laravel Helpers
+slogan: Laravel helper functions for Non-Laravel projects. Compatible with Laravel 10, 11, and 12.
 githubUrl: https://github.com/rappasoft/laravel-helpers
 branch: master
 ---

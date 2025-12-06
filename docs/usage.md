@@ -3,6 +3,35 @@ title: Usage
 weight: 5
 ---
 
+All helper functions are automatically available after installation. No configuration required!
+
+## Quick Examples
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+// String manipulation
+$slug = str_slug('Hello World'); // "hello-world"
+$plural = str_plural('user', 2); // "users"
+$masked = str_mask('1234567890', '*', 3, 4); // "123****890"
+
+// Array operations
+$value = array_get($data, 'user.profile.name', 'Default');
+$hasKey = array_has($data, 'user.email');
+$first = array_key_first($array);
+
+// General utilities
+if (blank($value)) {
+    // Handle empty value
+}
+
+$result = transform($value, function ($v) {
+    return strtoupper($v);
+}, 'default');
+```
+
 ## Arrays
 
 ### array_accessible
@@ -151,11 +180,11 @@ function array_last(array $array, callable $callback = null, $default = null)
  * Flatten a multi-dimensional array into a single level.
  *
  * @param  iterable  $array
- * @param  int  $depth
+ * @param  int|float  $depth
  *
  * @return array
  */
-function array_flatten(iterable $array, int $depth): array
+function array_flatten(iterable $array, int|float $depth = INF): array
 ```
 
 ### array_forget
@@ -310,13 +339,13 @@ function array_query(array $array): string
  *
  * @param  array  $array
  * @param  int|null  $number
- * @param  bool|false  $preserveKeys
+ * @param  bool  $preserveKeys
  *
  * @return mixed
  *
  * @throws \InvalidArgumentException
  */
-function array_random(array $array, int $number = null, bool $preserveKeys)
+function array_random(array $array, ?int $number = null, bool $preserveKeys = false)
 ```
 
 ### array_set
@@ -339,7 +368,7 @@ function array_set(array &$array, ?string $key, $value): array
 ### array_shuffle
 
 ```php
- /**
+/**
  * Shuffle the given array and return the result.
  *
  * @param  array  $array
@@ -347,7 +376,7 @@ function array_set(array &$array, ?string $key, $value): array
  *
  * @return array
  */
-function array_shuffle(array $array, int $seed = null): array
+function array_shuffle(array $array, ?int $seed = null): array
 ```
 
 ### array_sort_recursive
@@ -473,6 +502,94 @@ function head(array $array)
  * @return mixed
  */
 function last(array $array)
+```
+
+### array_key_first
+
+```php
+/**
+ * Get the first key of the given array without affecting the internal array pointer.
+ *
+ * @param  array  $array
+ * @return int|string|null
+ */
+function array_key_first(array $array)
+```
+
+### array_key_last
+
+```php
+/**
+ * Get the last key of the given array without affecting the internal array pointer.
+ *
+ * @param  array  $array
+ * @return int|string|null
+ */
+function array_key_last(array $array)
+```
+
+### array_map_assoc
+
+```php
+/**
+ * Run a map over each of the items in the array.
+ *
+ * @param  callable  $callback
+ * @param  array  $array
+ * @return array
+ */
+function array_map_assoc(callable $callback, array $array): array
+```
+
+### array_map_with_keys
+
+```php
+/**
+ * Run a map over each of the items in the array.
+ *
+ * @param  callable  $callback
+ * @param  array  $array
+ * @return array
+ */
+function array_map_with_keys(callable $callback, array $array): array
+```
+
+### array_undot
+
+```php
+/**
+ * Expand a dotted array into a full multi-dimensional array.
+ *
+ * @param  iterable  $array
+ * @return array
+ */
+function array_undot(iterable $array): array
+```
+
+### array_value_first
+
+```php
+/**
+ * Get the first value from an array.
+ *
+ * @param  array  $array
+ * @param  mixed  $default
+ * @return mixed
+ */
+function array_value_first(array $array, $default = null)
+```
+
+### array_value_last
+
+```php
+/**
+ * Get the last value from an array.
+ *
+ * @param  array  $array
+ * @param  mixed  $default
+ * @return mixed
+ */
+function array_value_last(array $array, $default = null)
 ```
 
 ### to_array
@@ -683,7 +800,7 @@ function str_kebab(string $value): string
  *
  * @return int
  */
-function str_length(string $value, string $encoding = null): int
+function str_length(string $value, ?string $encoding = null): int
 ```
 
 ### str_limit
@@ -979,6 +1096,223 @@ function str_camel(string $value): string
 function str_uuid4(): string
 ```
 
+### str_ascii
+
+```php
+/**
+ * Transliterate a UTF-8 value to ASCII.
+ *
+ * @param  string  $value
+ * @param  string  $language
+ * @return string
+ */
+function str_ascii(string $value, string $language = 'en'): string
+```
+
+### str_slug
+
+```php
+/**
+ * Generate a URL friendly "slug" from a given string.
+ *
+ * @param  string  $title
+ * @param  string  $separator
+ * @param  string|null  $language
+ * @return string
+ */
+function str_slug(string $title, string $separator = '-', ?string $language = 'en'): string
+```
+
+### str_plural
+
+```php
+/**
+ * Get the plural form of an English word.
+ *
+ * @param  string  $value
+ * @param  int|array|\Countable  $count
+ * @return string
+ */
+function str_plural(string $value, $count = 2): string
+```
+
+### str_singular
+
+```php
+/**
+ * Get the singular form of an English word.
+ *
+ * @param  string  $value
+ * @return string
+ */
+function str_singular(string $value): string
+```
+
+### str_ucfirst
+
+```php
+/**
+ * Make a string's first character uppercase.
+ *
+ * @param  string  $string
+ * @return string
+ */
+function str_ucfirst(string $string): string
+```
+
+### str_lcfirst
+
+```php
+/**
+ * Make a string's first character lowercase.
+ *
+ * @param  string  $string
+ * @return string
+ */
+function str_lcfirst(string $string): string
+```
+
+### str_mask
+
+```php
+/**
+ * Mask a portion of a string with a repeated character.
+ *
+ * @param  string  $string
+ * @param  string  $character
+ * @param  int  $index
+ * @param  int|null  $length
+ * @return string
+ */
+function str_mask(string $string, string $character, int $index, ?int $length = null): string
+```
+
+### str_contains_any
+
+```php
+/**
+ * Determine if a given string contains any of the given substrings.
+ *
+ * @param  string  $haystack
+ * @param  string[]  $needles
+ * @return bool
+ */
+function str_contains_any(string $haystack, array $needles): bool
+```
+
+### str_excerpt
+
+```php
+/**
+ * Extract an excerpt from text that matches the first instance of a phrase.
+ *
+ * @param  string  $text
+ * @param  string  $phrase
+ * @param  array  $options
+ * @return string|null
+ */
+function str_excerpt(string $text, string $phrase = '', array $options = []): ?string
+```
+
+### str_headline
+
+```php
+/**
+ * Convert the given string to title case for each word.
+ *
+ * @param  string  $value
+ * @return string
+ */
+function str_headline(string $value): string
+```
+
+### str_is_ascii
+
+```php
+/**
+ * Determine if a given string is 7 bit ASCII.
+ *
+ * @param  string  $value
+ * @return bool
+ */
+function str_is_ascii(string $value): bool
+```
+
+### str_is_json
+
+```php
+/**
+ * Determine if a given string is valid JSON.
+ *
+ * @param  string  $value
+ * @return bool
+ */
+function str_is_json(string $value): bool
+```
+
+### str_password
+
+```php
+/**
+ * Generate a more truly "random" alpha-numeric string.
+ *
+ * @param  int  $length
+ * @return string
+ */
+function str_password(int $length = 32): string
+```
+
+### str_reverse
+
+```php
+/**
+ * Reverse the given string.
+ *
+ * @param  string  $value
+ * @return string
+ */
+function str_reverse(string $value): string
+```
+
+### str_squish
+
+```php
+/**
+ * Remove all "extra" blank space from the given string.
+ *
+ * @param  string  $value
+ * @return string
+ */
+function str_squish(string $value): string
+```
+
+### str_swap
+
+```php
+/**
+ * Swap multiple values in a string with other values.
+ *
+ * @param  array  $map
+ * @param  string  $subject
+ * @return string
+ */
+function str_swap(array $map, string $subject): string
+```
+
+### str_wrap
+
+```php
+/**
+ * Wrap a string to a given number of characters.
+ *
+ * @param  string  $value
+ * @param  int  $width
+ * @param  string  $break
+ * @return string
+ */
+function str_wrap(string $value, int $width = 75, string $break = "\n"): string
+```
+
 ### str_jwt
 
 ```php
@@ -1030,7 +1364,7 @@ function class_uses_recursive($class): array
 function trait_uses_recursive($trait): array
 ```
 
-## Miscellaneous
+## General Helpers
 
 ### dd
 
@@ -1038,10 +1372,146 @@ function trait_uses_recursive($trait): array
 /**
  * Dump the passed variables and end the script.
  *
- * @param  mixed
- * @return void
+ * @param  mixed  ...$vars
+ * @return never
  */
-function dd()
+function dd(...$vars)
+```
+
+### dump
+
+```php
+/**
+ * Dump the passed variables.
+ *
+ * @param  mixed  ...$vars
+ * @return mixed
+ */
+function dump(...$vars)
+```
+
+### str
+
+```php
+/**
+ * Get a string helper instance or return the string.
+ *
+ * @param  string|null  $string
+ * @return string|object
+ */
+function str($string = null)
+```
+
+### blank
+
+```php
+/**
+ * Determine if the given value is "blank".
+ *
+ * @param  mixed  $value
+ * @return bool
+ */
+function blank($value)
+```
+
+### filled
+
+```php
+/**
+ * Determine if a value is "filled".
+ *
+ * @param  mixed  $value
+ * @return bool
+ */
+function filled($value)
+```
+
+### throw_if
+
+```php
+/**
+ * Throw the given exception if the given condition is true.
+ *
+ * @param  mixed  $condition
+ * @param  \Throwable|string  $exception
+ * @param  array  ...$parameters
+ * @return mixed
+ *
+ * @throws \Throwable
+ */
+function throw_if($condition, $exception, ...$parameters)
+```
+
+### throw_unless
+
+```php
+/**
+ * Throw the given exception unless the given condition is true.
+ *
+ * @param  mixed  $condition
+ * @param  \Throwable|string  $exception
+ * @param  array  ...$parameters
+ * @return mixed
+ *
+ * @throws \Throwable
+ */
+function throw_unless($condition, $exception, ...$parameters)
+```
+
+### transform
+
+```php
+/**
+ * Transform the given value if it is present.
+ *
+ * @param  mixed  $value
+ * @param  callable  $callback
+ * @param  mixed  $default
+ * @return mixed|null
+ */
+function transform($value, callable $callback, $default = null)
+```
+
+### windows_os
+
+```php
+/**
+ * Determine if the current environment is Windows based.
+ *
+ * @return bool
+ */
+function windows_os()
+```
+
+### retry
+
+```php
+/**
+ * Retry an operation a given number of times.
+ *
+ * @param  int  $times
+ * @param  callable  $callback
+ * @param  int|\Closure  $sleepMilliseconds
+ * @param  callable|null  $when
+ * @return mixed
+ *
+ * @throws \Throwable
+ */
+function retry($times, callable $callback, $sleepMilliseconds = 0, $when = null)
+```
+
+### rescue
+
+```php
+/**
+ * Catch a potential exception and return a default value.
+ *
+ * @param  callable  $callback
+ * @param  mixed  $rescue
+ * @param  bool  $report
+ * @return mixed
+ */
+function rescue(callable $callback, $rescue = null, $report = true)
 ```
 
 ### e
