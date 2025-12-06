@@ -179,7 +179,7 @@ if (! function_exists('array_first')) {
      *
      * @return mixed
      */
-    function array_first(iterable $array, callable $callback = null, $default = null)
+    function array_first(iterable $array, ?callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
             if (empty($array)) {
@@ -211,7 +211,7 @@ if (! function_exists('array_last')) {
      *
      * @return mixed
      */
-    function array_last(array $array, callable $callback = null, $default = null)
+    function array_last(array $array, ?callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
             return empty($array) ? value($default) : end($array);
@@ -230,21 +230,17 @@ if (! function_exists('array_flatten')) {
      *
      * @return array
      */
-    function array_flatten(iterable $array, int $depth): array
+    function array_flatten(iterable $array, int|float $depth = INF): array
     {
         $result = [];
 
         foreach ($array as $item) {
             if (!is_array($item)) {
                 $result[] = $item;
+            } elseif ($depth === 1) {
+                $result = array_merge($result, array_values($item));
             } else {
-                $values = $depth === 1
-                    ? array_values($item)
-                    : array_flatten($item, $depth - 1);
-
-                foreach ($values as $value) {
-                    $result[] = $value;
-                }
+                $result = array_merge($result, array_flatten($item, $depth - 1));
             }
         }
 
@@ -553,7 +549,7 @@ if (! function_exists('array_random')) {
      *
      * @throws \InvalidArgumentException
      */
-    function array_random(array $array, int $number = null, bool $preserveKeys)
+    function array_random(array $array, ?int $number = null, bool $preserveKeys = false)
     {
         $requested = is_null($number) ? 1 : $number;
 
@@ -643,7 +639,7 @@ if (! function_exists('array_shuffle')) {
      *
      * @return array
      */
-    function array_shuffle(array $array, int $seed = null): array
+    function array_shuffle(array $array, ?int $seed = null): array
     {
         if (is_null($seed)) {
             shuffle($array);
@@ -902,6 +898,143 @@ if (! function_exists('last')) {
     function last(array $array)
     {
         return end($array);
+    }
+}
+
+if (! function_exists('array_key_first')) {
+    /**
+     * Get the first key of the given array without affecting the internal array pointer.
+     *
+     * @param  array  $array
+     * @return int|string|null
+     */
+    function array_key_first(array $array)
+    {
+        if (PHP_VERSION_ID >= 70300 && function_exists('\array_key_first')) {
+            return \array_key_first($array);
+        }
+
+        foreach ($array as $key => $unused) {
+            return $key;
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('array_key_last')) {
+    /**
+     * Get the last key of the given array without affecting the internal array pointer.
+     *
+     * @param  array  $array
+     * @return int|string|null
+     */
+    function array_key_last(array $array)
+    {
+        if (PHP_VERSION_ID >= 70300 && function_exists('\array_key_last')) {
+            return \array_key_last($array);
+        }
+
+        if (empty($array)) {
+            return null;
+        }
+
+        return array_keys($array)[count($array) - 1];
+    }
+}
+
+if (! function_exists('array_map_assoc')) {
+    /**
+     * Run a map over each of the items in the array.
+     *
+     * @param  callable  $callback
+     * @param  array  $array
+     * @return array
+     */
+    function array_map_assoc(callable $callback, array $array): array
+    {
+        $keys = array_keys($array);
+
+        $items = array_map($callback, $array, $keys);
+
+        $keys = array_keys($items);
+
+        return array_combine($keys, $items);
+    }
+}
+
+if (! function_exists('array_map_with_keys')) {
+    /**
+     * Run a map over each of the items in the array.
+     *
+     * @param  callable  $callback
+     * @param  array  $array
+     * @return array
+     */
+    function array_map_with_keys(callable $callback, array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            $assoc = $callback($value, $key);
+
+            foreach ($assoc as $mapKey => $mapValue) {
+                $result[$mapKey] = $mapValue;
+            }
+        }
+
+        return $result;
+    }
+}
+
+if (! function_exists('array_undot')) {
+    /**
+     * Expand a dotted array into a full multi-dimensional array.
+     *
+     * @param  iterable  $array
+     * @return array
+     */
+    function array_undot(iterable $array): array
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            array_set($results, $key, $value);
+        }
+
+        return $results;
+    }
+}
+
+if (! function_exists('array_value_first')) {
+    /**
+     * Get the first value from an array.
+     *
+     * @param  array  $array
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function array_value_first(array $array, $default = null)
+    {
+        foreach ($array as $value) {
+            return $value;
+        }
+
+        return value($default);
+    }
+}
+
+if (! function_exists('array_value_last')) {
+    /**
+     * Get the last value from an array.
+     *
+     * @param  array  $array
+     * @param  mixed  $default
+     * @return mixed
+     */
+    function array_value_last(array $array, $default = null)
+    {
+        return empty($array) ? value($default) : end($array);
     }
 }
 
