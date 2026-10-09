@@ -268,6 +268,8 @@ if (! function_exists('array_forget')) {
         }
 
         foreach ($keys as $key) {
+            $array = &$original;
+
             // if the exact key exists in the top-level, remove it
             if (array_exists($array, $key)) {
                 unset($array[$key]);
@@ -276,9 +278,6 @@ if (! function_exists('array_forget')) {
             }
 
             $parts = explode('.', $key);
-
-            // clean up before each pass
-            $array = &$original;
 
             while (count($parts) > 1) {
                 $part = array_shift($parts);

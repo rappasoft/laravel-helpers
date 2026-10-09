@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Preserve increasing attempt numbers in `retry()` and pass the attempt and exception to delay closures.
+- Pass closure arguments through `value()`.
+- Delete mixed nested and top-level keys from the correct array in `array_forget()` and `array_except()`.
+
+### Changed
+- Support patched PHPUnit 10–13 releases and exclude versions affected by CVE-2026-24765.
+- Declare the `ctype` and `mbstring` extensions required by string helpers.
+- Update GitHub Actions, add PHP 8.5 coverage, and audit dependencies in CI.
+- Document native PHP string helper signatures and retry callback arguments.
+- Document PHP 8.5's native `array_first`/`array_last` signatures and existing helpers for filtering and defaults.
+
 ## [3.0.0] - 2025-01-XX
 
 ### Added

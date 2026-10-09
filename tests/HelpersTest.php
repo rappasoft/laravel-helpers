@@ -34,6 +34,7 @@ class HelpersTest extends TestCase
         $this->assertEquals('closure', value(function () {
             return 'closure';
         }));
+        $this->assertSame(3, value(fn ($left, $right) => $left + $right, 1, 2));
     }
 
     public function testTap()
@@ -149,18 +150,55 @@ class HelpersTest extends TestCase
 
     public function testRetry()
     {
-        $callCount = 0;
-        $result = retry(3, function ($attempt) use (&$callCount) {
-            $callCount++;
-            // Retry function has a bug where attempts resets, so we'll just test that it retries
-            if ($callCount < 3) {
+        $attempts = [];
+        $delays = [];
+        $result = retry(3, function ($attempt) use (&$attempts) {
+            $attempts[] = $attempt;
+            if (count($attempts) < 3) {
                 throw new \Exception('Failed');
             }
             return 'success';
+        }, function ($attempt, $exception) use (&$delays) {
+            $delays[] = [$attempt, $exception->getMessage()];
+            return 0;
         });
 
         $this->assertEquals('success', $result);
-        $this->assertEquals(3, $callCount);
+        $this->assertSame([1, 2, 3], $attempts);
+        $this->assertSame([[1, 'Failed'], [2, 'Failed']], $delays);
+    }
+
+    public function testRetryPreservesTheFinalException()
+    {
+        $exception = new \RuntimeException('Failed');
+        $attempts = [];
+
+        try {
+            retry(2, function ($attempt) use ($exception, &$attempts) {
+                $attempts[] = $attempt;
+                throw $exception;
+            });
+            $this->fail('Retry should throw after the last attempt.');
+        } catch (\RuntimeException $caught) {
+            $this->assertSame($exception, $caught);
+            $this->assertSame([1, 2], $attempts);
+        }
+    }
+
+    public function testRetryStopsWhenThePredicateRejectsTheException()
+    {
+        $attempts = [];
+
+        try {
+            retry(3, function ($attempt) use (&$attempts) {
+                $attempts[] = $attempt;
+                throw new \RuntimeException('Do not retry');
+            }, 0, fn ($exception) => false);
+            $this->fail('Retry should throw when the predicate returns false.');
+        } catch (\RuntimeException $exception) {
+            $this->assertSame('Do not retry', $exception->getMessage());
+            $this->assertSame([1], $attempts);
+        }
     }
 
     public function testRescue()

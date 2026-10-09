@@ -5,6 +5,15 @@ weight: 5
 
 All helper functions are automatically available after installation. No configuration required!
 
+Functions that PHP already provides, such as `str_contains`, `str_starts_with`, and `str_ends_with`, keep their native PHP signatures and accept one string needle. Use `str_contains_any` or `str_contains_all` when checking several needles.
+
+PHP 8.5 also provides native `array_first` and `array_last`, which accept only an array. For callback filtering or default values on any supported PHP version, use the existing `array_where`, `array_value_first`, and `array_value_last` helpers:
+
+```php
+$first = array_value_first(array_where($items, fn ($item) => $item > 150), 'default');
+$last = array_value_last(array_where($items, fn ($item) => $item < 250), 'default');
+```
+
 ## Quick Examples
 
 ```php
@@ -145,6 +154,8 @@ function array_exists($array, $key): bool
 
 ### array_first
 
+On PHP 8.5 and later, this is PHP's native `array_first(array $array)` function. The callback and default arguments below are available on PHP 8.1–8.4.
+
 ```php
 /**
  * Return the first element in an array passing a given truth test.
@@ -159,6 +170,8 @@ function array_first(iterable $array, callable $callback = null, $default = null
 ```
 
 ### array_last
+
+On PHP 8.5 and later, this is PHP's native `array_last(array $array)` function. The callback and default arguments below are available on PHP 8.1–8.4.
 
 ```php
 /**
@@ -391,7 +404,7 @@ function array_shuffle(array $array, ?int $seed = null): array
  *
  * @return array
  */
-function array_sort_recursive(array $array, int $options = SORT_REGULAR, bool $descending): array
+function array_sort_recursive(array $array, int $options = SORT_REGULAR, bool $descending = false): array
 ```
 
 ### array_to_css_classes
@@ -700,11 +713,11 @@ function str_between(string $subject, string $from, string $to): string
  * Determine if a given string contains a given substring.
  *
  * @param  string  $haystack
- * @param  string|string[]  $needles
+ * @param  string  $needle
  *
  * @return bool
  */
-function str_contains(string $haystack, $needles): bool
+function str_contains(string $haystack, string $needle): bool
 ```
 
 ### str_contains_all
@@ -728,11 +741,11 @@ function str_contains_all(string $haystack, array $needles): bool
  * Determine if a given string ends with a given substring.
  *
  * @param  string  $haystack
- * @param  string|string[]  $needles
+ * @param  string  $needle
  *
  * @return bool
  */
-function str_ends_with(string $haystack, $needles): bool
+function str_ends_with(string $haystack, string $needle): bool
 ```
 
 ### str_finish
@@ -1039,11 +1052,11 @@ function str_snake(string $value, string $delimiter = '_'): string
  * Determine if a given string starts with a given substring.
  *
  * @param  string  $haystack
- * @param  string|string[]  $needles
+ * @param  string  $needle
  *
  * @return bool
  */
-function str_starts_with(string $haystack, $needles): bool
+function str_starts_with(string $haystack, string $needle): bool
 ```
 
 ### str_studly
@@ -1491,13 +1504,20 @@ function windows_os()
  *
  * @param  int  $times
  * @param  callable  $callback
- * @param  int|\Closure  $sleepMilliseconds
+ * @param  int|\Closure(int, \Throwable): int  $sleepMilliseconds
  * @param  callable|null  $when
  * @return mixed
  *
  * @throws \Throwable
  */
 function retry($times, callable $callback, $sleepMilliseconds = 0, $when = null)
+```
+
+The operation receives its attempt number, starting at `1`. A delay closure receives the failed attempt number and exception, and returns milliseconds to wait before the next attempt. The final exception is rethrown when all attempts fail or `$when` returns `false`.
+
+```php
+$result = retry(3, fn ($attempt) => performOperation($attempt),
+    fn ($attempt, $exception) => $attempt * 100);
 ```
 
 ### rescue
@@ -1565,8 +1585,10 @@ function tap($value, callable $callback)
  * @param  mixed $value
  * @return mixed
  */
-function value($value)
+function value($value, ...$args)
 ```
+
+Additional arguments are passed to the closure. Non-closure values are returned unchanged.
 
 ### with
 

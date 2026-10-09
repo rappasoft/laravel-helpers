@@ -95,9 +95,9 @@ if (!function_exists('value')) {
      * @param  mixed $value
      * @return mixed
      */
-    function value($value)
+    function value($value, ...$args)
     {
-        return $value instanceof Closure ? $value() : $value;
+        return $value instanceof Closure ? $value(...$args) : $value;
     }
 }
 
@@ -290,7 +290,7 @@ if (!function_exists('retry')) {
      *
      * @param  int  $times
      * @param  callable  $callback
-     * @param  int|\Closure  $sleepMilliseconds
+     * @param  int|\Closure(int, \Throwable): int  $sleepMilliseconds
      * @param  callable|null  $when
      * @return mixed
      *
@@ -307,8 +307,6 @@ if (!function_exists('retry')) {
         try {
             return $callback($attempts);
         } catch (\Throwable $e) {
-            $attempts--;
-
             if ($times < 1 || ($when && !$when($e))) {
                 throw $e;
             }
@@ -316,7 +314,7 @@ if (!function_exists('retry')) {
             $times--;
 
             if ($sleepMilliseconds) {
-                usleep(value($sleepMilliseconds, $attempts) * 1000);
+                usleep(value($sleepMilliseconds, $attempts, $e) * 1000);
             }
 
             goto beginning;
