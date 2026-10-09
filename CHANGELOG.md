@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [3.0.2] - 2026-10-09
+
+### Fixed
+- Preserve increasing attempt numbers in `retry()` and pass the attempt and exception to delay closures.
+- Pass closure arguments through `value()`.
+- Delete mixed nested and top-level keys from the correct array in `array_forget()` and `array_except()`.
+
+### Changed
+- Support patched PHPUnit 10–13 releases and exclude versions affected by CVE-2026-24765.
+- Declare the `ctype` and `mbstring` extensions required by string helpers.
+- Update GitHub Actions, add PHP 8.5 coverage, and audit dependencies in CI.
+- Document native PHP string helper signatures and retry callback arguments.
+- Document PHP 8.5's native `array_first`/`array_last` signatures and existing helpers for filtering and defaults.
+
+### Compatibility
+- Requires PHP 8.1 or higher with the `ctype` and `mbstring` extensions; tested on PHP 8.1–8.5.
+- PHP 8.5 supplies native `array_first(array $array)` and `array_last(array $array)` functions. The legacy callback/default arguments are available only on PHP 8.1–8.4. Before upgrading PHP, replace calls that use these arguments with `array_value_first(array_where($items, $callback), $default)` or `array_value_last(array_where($items, $callback), $default)`.
+
 ## [3.0.0] - 2025-01-XX
 
 ### Added
@@ -78,5 +98,7 @@ See git history for previous version changes.
 
 ---
 
-[3.0.0]: https://github.com/rappasoft/laravel-helpers/compare/v2.x...v3.0.0
+[Unreleased]: https://github.com/rappasoft/laravel-helpers/compare/v3.0.2...master
+[3.0.2]: https://github.com/rappasoft/laravel-helpers/compare/v3.0.1...v3.0.2
+[3.0.0]: https://github.com/rappasoft/laravel-helpers/compare/v2.1.0...v3.0.0
 

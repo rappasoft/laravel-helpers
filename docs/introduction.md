@@ -18,11 +18,12 @@ This major release brings the package up to date with Laravel 10, 11, and 12, ad
 - ✅ **100+ Laravel helper functions** - All the helpers you know and love
 - ✅ **Laravel 10/11/12 compatible** - Up to date with the latest Laravel versions
 - ✅ **PHP 8.1+ support** - Modern PHP with better performance
-- ✅ **Comprehensive tests** - 105 tests with 234 assertions
+- ✅ **Comprehensive tests** - Covers helper behavior, retry failures, and nested array deletion
 - ✅ **CI/CD ready** - GitHub Actions workflow included
 - ✅ **Well documented** - Complete function documentation
 
 ### Requirements
 
 - PHP 8.1 or higher
+- PHP extensions: `ctype` and `mbstring`
 - Composer

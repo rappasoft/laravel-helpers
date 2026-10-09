@@ -6,6 +6,7 @@ weight: 4
 ## Requirements
 
 - PHP 8.1 or higher
+- PHP extensions: `ctype` and `mbstring`
 - Composer
 
 ## Installation

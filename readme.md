@@ -14,6 +14,7 @@ This project takes the useful [Laravel helper functions](https://laravel.com/doc
 ## Requirements
 
 - PHP 8.1 or higher
+- PHP extensions: `ctype` and `mbstring`
 - Composer
 
 ## Installation

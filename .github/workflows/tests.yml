@@ -23,10 +23,11 @@ jobs:
                     - "8.2"
                     - "8.3"
                     - "8.4"
+                    - "8.5"
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -39,7 +40,7 @@ jobs:
               run: composer validate --strict
 
             - name: Cache Composer dependencies
-              uses: actions/cache@v4
+              uses: actions/cache@v6
               with:
                   path: ~/.composer/cache
                   key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -50,11 +51,14 @@ jobs:
               run: composer install --prefer-dist --no-progress --no-interaction
 
             - name: Run tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-deprecation
+
+            - name: Audit dependencies
+              run: composer audit
 
             - name: Upload test results
               if: always()
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: test-results-php-${{ matrix.php-version }}-${{ matrix.os }}
                   path: |

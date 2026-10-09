@@ -67,6 +67,13 @@ class ArraysTest extends TestCase
     public function testArrayFirst()
     {
         $array = [100, 200, 300];
+        if (PHP_VERSION_ID >= 80500) {
+            $this->assertSame(100, array_first($array));
+            $this->assertSame(200, array_value_first(array_where($array, fn ($value) => $value > 150)));
+            $this->assertSame('default', array_value_first([], 'default'));
+            return;
+        }
+
         $this->assertEquals(200, array_first($array, function ($value) {
             return $value > 150;
         }));
@@ -78,6 +85,11 @@ class ArraysTest extends TestCase
     {
         $array = [100, 200, 300];
         $this->assertEquals(300, array_last($array));
+        if (PHP_VERSION_ID >= 80500) {
+            $this->assertSame(200, array_value_last(array_where($array, fn ($value) => $value < 250)));
+            return;
+        }
+
         $this->assertEquals(200, array_last($array, function ($value) {
             return $value < 250;
         }));
@@ -100,6 +112,14 @@ class ArraysTest extends TestCase
         array_forget($array, 'foo');
         $this->assertArrayNotHasKey('foo', $array);
         $this->assertArrayHasKey('baz', $array);
+
+        $array = ['user' => ['name' => 'Alice', 'top' => 'nested'], 'top' => 'root'];
+        array_forget($array, ['user.name', 'top']);
+        $this->assertSame(['user' => ['top' => 'nested']], $array);
+
+        $array = ['user' => ['name' => 'Alice', 'top' => 'nested'], 'top' => 'root'];
+        $this->assertSame(['user' => ['top' => 'nested']], array_except($array, ['user.name', 'top']));
+        $this->assertSame('root', $array['top']);
     }
 
     public function testArrayGet()
